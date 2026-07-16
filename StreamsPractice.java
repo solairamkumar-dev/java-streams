@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.stream.*;
+import java.util.function.Function;
 
 /**
  * Practice class containing 100 method stubs for learning Java Streams.
@@ -387,62 +388,91 @@ public class StreamsPractice {
 
         return sampleText.chars().mapToObj(x -> (char) x)
         .filter(x -> "aeiouAEIOU".indexOf(x) == -1)
-        .cont();
+        .count();
     }
 
     // Q43: Remove all whitespace from sampleText using streams.
     public static String q43() {
         // TODO: Implement stream here
-        return Arrays.stream(sampleText.replace(" ",""));
+        return sampleText.chars()
+        .filter(x -> !Character.isWhitespace(x))
+        .mapToObj(c -> String.valueOf((char) c))
+        .collect(Collectors.joining());
     }
 
     // Q44: Split sampleText into words and count the total number of words.
     public static long q44() {
         // TODO: Implement stream here
-        return 0;
+        return Arrays.stream(sampleText.split(" "))
+        .count();
     }
 
     // Q45: Find the first non-repeated character in sampleText (case-insensitive).
     public static Optional<Character> q45() {
         // TODO: Implement stream here
-        return Optional.empty();
+        return Arrays.stream(sampleText.replace(" ","").split(""))
+        .collect(Collectors.groupingBy(
+            x->x ,LinkedHashMap::new, Collectors.counting()
+        )).entrySet().stream()
+        .filter(x -> x.getValue() == 1)
+        .map(x -> x.getKey().charAt(0))
+        .findFirst();
     }
 
     // Q46: Find the first repeated character in sampleText (case-insensitive).
     public static Optional<Character> q46() {
         // TODO: Implement stream here
-        return Optional.empty();
+           return Arrays.stream(sampleText.replace(" ","").split(""))
+        .collect(Collectors.groupingBy(
+            x->x ,LinkedHashMap::new, Collectors.counting()
+        )).entrySet().stream()
+        .filter(x -> x.getValue() != 1)
+        .map(x -> x.getKey().charAt(0))
+        .findFirst();
     }
 
     // Q47: Count occurrences of each character in sampleText (excluding spaces).
     public static Map<Character, Long> q47() {
         // TODO: Implement stream here
-        return null;
+        return sampleText.replace(" ","").chars()
+        .mapToObj(x -> (char) x)
+        .collect(Collectors.groupingBy(
+            x->x , Collectors.counting()
+        ));
     }
 
     // Q48: Sort characters of sampleText (excluding spaces) alphabetically and join
     // them.
     public static String q48() {
         // TODO: Implement stream here
-        return null;
+        return sampleText.chars()
+        .filter(c -> !Character.isWhitespace(c))
+        .sorted()
+        .mapToObj(c -> String.valueOf((char) c))
+        .collect(Collectors.joining());
     }
 
     // Q49: Check if sampleText contains only digits.
     public static boolean q49() {
         // TODO: Implement stream here
-        return false;
+        return  sampleText.chars()
+               .allMatch(Character::isDigit);
     }
 
     // Q50: Reverse sampleText using streams.
     public static String q50() {
         // TODO: Implement stream here
-        return null;
+        return IntStream.range(0 , sampleText.length())
+        .map(x -> sampleText.charAt(sampleText.length() - 1 -x))
+        .mapToObj(c -> String.valueOf((char) c))
+        .collect(Collectors.joining());
     }
 
     // Q51: Find the longest word in sampleText.
     public static Optional<String> q51() {
         // TODO: Implement stream here
-        return Optional.empty();
+        return Arrays.stream(sampleText.split(" "))
+        .max(Comparator.comparingInt(String::length));
     }
 
     // Q52: Check if two strings str1 and str2 are anagrams using streams.
